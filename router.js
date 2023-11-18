@@ -1,22 +1,24 @@
 import express from "express";
-import bodyParser from "body-parser";
+import db from "./connection.js";
+import response from "./response.js";
 const router = express.Router();
-// create application/json parser
-
-// create application/x-www-form-urlencoded parser
-router.use(bodyParser.json());
 
 router.post("/login", (req, res) => {
-  console.log({ username: req.body.username });
+  console.log({ username: req.body });
   res.send(`Login Success`);
 });
 
 router.get("/", (req, res) => {
-  res.send("Hello World!");
+  db.query("SELECT * FROM tb_mahasiswa", (err, result) => {
+    response(200, result, "Get all data mahasiswa", res);
+  });
 });
 
-router.get("/home", (req, res) => {
-  res.send("This is HomePage!");
+router.get("/getid", (req, res) => {
+  const sql = `SELECT * FROM tb_mahasiswa WHERE id=${req.query.id}`;
+  db.query(sql, (error, result) => {
+    response(200, result, "Get id from Mahasiswa", res);
+  });
 });
 
 router.get("/about", (req, res) => {
